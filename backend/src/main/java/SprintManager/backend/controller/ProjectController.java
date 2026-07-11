@@ -16,7 +16,7 @@ public class ProjectController {
         return  projectService.getAll();
     };
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public Project getById(@PathVariable Long id){
         return projectService.getById(id);
     };
@@ -26,7 +26,7 @@ public class ProjectController {
         return projectService.create(project);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id){
       boolean deleted = projectService.delete(id);
       return deleted ? "Proyecto eliminado" : "Proyecto no encontrado";
