@@ -9,7 +9,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
-    private ProjectService projectService= new ProjectService();
+    private final ProjectService projectService;
+
+    public ProjectController (ProjectService projectService){
+        this.projectService = projectService;
+    }
 
     @GetMapping
     public List<Project> getAll(){

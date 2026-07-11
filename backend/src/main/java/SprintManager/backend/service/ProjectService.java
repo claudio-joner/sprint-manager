@@ -1,6 +1,7 @@
 package SprintManager.backend.service;
 
 import SprintManager.backend.model.Project;
+import SprintManager.backend.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -8,6 +9,33 @@ import java.util.List;
 
 @Service
 public class ProjectService {
+    private final ProjectRepository projectRepository;
+
+    public ProjectService(ProjectRepository projectRepository){
+        this.projectRepository = projectRepository;
+    }
+
+    public List<Project> getAll(){
+        return projectRepository.findAll();
+    }
+
+    public Project getById(Long id){
+        return projectRepository.findById(id).orElse(null);
+    }
+
+    public Project create(Project project){
+        return projectRepository.save(project);
+    }
+
+    public boolean delete(Long id){
+        if(projectRepository.existsById(id)){
+            projectRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+    /*
+    -------------SIN REPOSITORI------------------------
     private List<Project> projects = new ArrayList<>();
     private Long nextId = 1L;
 
@@ -29,5 +57,5 @@ public class ProjectService {
     public boolean delete(Long id){
         return projects.removeIf(p -> p.getId().equals(id));
     }
-
+    */
 }
