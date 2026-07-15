@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "funcionalities")
-public class Funcionality {
+public class Functionality {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -101,6 +101,6 @@ public class Funcionality {
     }
 
     //CONSTRUCTOR
-    public Funcionality() {
+    public Functionality() {
     }
 }
