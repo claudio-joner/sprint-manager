@@ -18,12 +18,12 @@ public class ProjectController {
     @GetMapping
     public List<Project> getAll(){
         return  projectService.getAll();
-    };
+    }
 
     @GetMapping("/{id}")
     public Project getById(@PathVariable Long id){
         return projectService.getById(id);
-    };
+    }
 
     @PostMapping
     public Project create(@RequestBody Project project){
@@ -34,7 +34,7 @@ public class ProjectController {
     public String delete(@PathVariable Long id){
       boolean deleted = projectService.delete(id);
       return deleted ? "Proyecto eliminado" : "Proyecto no encontrado";
-    };
+    }
 
 
 

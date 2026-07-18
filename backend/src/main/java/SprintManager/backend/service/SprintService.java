@@ -18,7 +18,7 @@ public class SprintService {
 
     public Sprint create(Sprint sprint){ return sprintRepository.save(sprint);}
 
-    public boolean deleted(Long id){
+    public boolean delete(Long id){
         if(sprintRepository.existsById(id)){
             sprintRepository.deleteById(id);
             return true;
