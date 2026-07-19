@@ -4,6 +4,7 @@ import SprintManager.backend.model.Project;
 import SprintManager.backend.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,17 @@ public class ProjectService {
         }
         return false;
     }
+
+    public Project closeProjecte(Long id){
+        Project project = projectRepository.findById(id).orElse(null);
+        if(project == null)return null;
+
+        project.setRealEndDate(LocalDate.now());
+        return projectRepository.save(project);
+    }
+
+
+
     /*
     -------------SIN REPOSITORI------------------------
     private List<Project> projects = new ArrayList<>();
