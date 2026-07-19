@@ -1,6 +1,7 @@
 package SprintManager.backend.service;
 
 import SprintManager.backend.model.Sprint;
+import SprintManager.backend.model.Task;
 import SprintManager.backend.repository.SprintRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,19 @@ public class SprintService {
             return true;
         }
         return false;
+    }
+
+    public Double calculateAvaiableHours(Long id){
+        Sprint sprint = sprintRepository.findById(id).orElse(null);
+        if (sprint==null) return null;
+
+        Double totalEstimated = 0.0;
+
+        for (Task task: sprint.getTasks()){
+            totalEstimated += task.getEstimatedTime();
+        }
+
+        return sprint.getTotalHours() - totalEstimated;
     }
 
 }
