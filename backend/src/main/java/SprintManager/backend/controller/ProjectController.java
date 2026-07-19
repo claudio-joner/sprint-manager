@@ -36,6 +36,11 @@ public class ProjectController {
       return deleted ? "Proyecto eliminado" : "Proyecto no encontrado";
     }
 
+    @PatchMapping("/{id}/close")
+    public Project closeProject(@PathVariable Long id){
+        return projectService.closeProject(id);
+    }
+
 
 
 

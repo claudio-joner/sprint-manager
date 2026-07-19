@@ -1,6 +1,7 @@
 package SprintManager.backend.controller;
 
 import SprintManager.backend.model.Task;
+import SprintManager.backend.model.emums.StatusTask;
 import SprintManager.backend.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,16 @@ public class TaskController {
     public String delete(@PathVariable Long id){
         boolean  task = taskService.delete(id);
         return task? "Task borrada.": "Task no encontrada.";
+    }
+
+    @PatchMapping("/{id}/status")
+    public Task updateStatus(@PathVariable Long id, @RequestBody StatusTask newStatus){
+        return taskService.updateStatus(id,newStatus);
+    }
+
+    @GetMapping("/{id}/exceeded-time")
+    public Double calculateExceededTime(@PathVariable Long id){
+        return taskService.calculateExceededTime(id);
     }
 
 }

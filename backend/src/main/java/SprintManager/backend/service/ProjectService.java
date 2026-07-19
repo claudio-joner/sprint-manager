@@ -36,7 +36,7 @@ public class ProjectService {
         return false;
     }
 
-    public Project closeProjecte(Long id){
+    public Project closeProject(Long id){
         Project project = projectRepository.findById(id).orElse(null);
         if(project == null)return null;
 
