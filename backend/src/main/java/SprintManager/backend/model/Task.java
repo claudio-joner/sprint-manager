@@ -1,6 +1,7 @@
 package SprintManager.backend.model;
 
 import SprintManager.backend.model.emums.StatusTask;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -36,14 +37,17 @@ public class Task {
     @Column(nullable = false)
     private LocalDate endDate;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "sprint_id")
     private Sprint sprint;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "functionality_id")
     private Functionality functionality;

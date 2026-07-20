@@ -1,6 +1,7 @@
 package SprintManager.backend.model;
 
 import SprintManager.backend.model.emums.*;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class Functionality {
     @Column(nullable = false)
     private Status status;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "project_id",nullable = false)
     private Project project;
@@ -32,6 +34,7 @@ public class Functionality {
     @JoinColumn(name = "sprint_id")
     private Sprint sprint;
 
+    @JsonManagedReference
     @OneToMany(mappedBy =  "functionality")
     private List<Task> tasks;
 

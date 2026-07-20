@@ -1,5 +1,6 @@
 package SprintManager.backend.model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -36,12 +37,15 @@ public class Project {
 
     private LocalDate  realEndDate;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "project")
     private List<Member> members;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "project")
     private List<Sprint> sprints;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "project")
     private List<Functionality> funcionalities;
 

@@ -1,5 +1,6 @@
 package SprintManager.backend.model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 
@@ -19,10 +20,12 @@ public class Sprint {
     @Column(nullable = false)
     private Double totalHours;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "sprint")
     private List<Task> tasks;
 

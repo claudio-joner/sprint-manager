@@ -1,5 +1,6 @@
 package SprintManager.backend.model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;

@@ -1,0 +1,7 @@
+<h2>Proyectos</h2>
+
+<ul>
+  @for (project of projects; track project.id) {
+    <li>{{ project.name }} - {{ project.client }}</li>
+  }
+</ul>
