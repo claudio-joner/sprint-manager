@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { ProjectListComponent } from './projects/project-list/project-list';
+import { DashboardComponent } from './dashboard/dashboard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'projects', pathMatch: 'full' },
+  { path: '', component: DashboardComponent },
   { path: 'projects', component: ProjectListComponent }
 ];

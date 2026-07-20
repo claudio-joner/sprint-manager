@@ -1,0 +1,25 @@
+<div class="dashboard">
+  <div class="welcome">
+    <h1>Hola, {{ userName }}</h1>
+    <p>{{ currentDate }}</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Proyectos iniciados</h3>
+      <span>{{ totalProjects }}</span>
+    </div>
+
+    <div class="stat-card">
+      <h3>Tareas pendientes</h3>
+      <span>{{ totalTasks }}</span>
+    </div>
+  </div>
+
+  @if (nextTask) {
+    <div class="next-task">
+      <h3>Próxima tarea por vencer</h3>
+      <p>{{ nextTask.name }} - {{ nextTask.project }}</p>
+    </div>
+  }
+</div>
