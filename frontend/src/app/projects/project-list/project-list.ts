@@ -35,4 +35,8 @@ export class ProjectListComponent implements OnInit {
   goToProject(id: number): void {
     this.router.navigate(['/projects', id]);
   }
+
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
 }

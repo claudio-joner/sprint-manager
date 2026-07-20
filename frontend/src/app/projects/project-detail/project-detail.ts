@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { ProjectService } from '../../services/project';
 import { KanbanBoardComponent } from '../../kanban/kanban-board/kanban-board';
+
 
 @Component({
   selector: 'app-project-detail',
@@ -18,7 +19,8 @@ export class ProjectDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -34,5 +36,9 @@ export class ProjectDetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/projects']);
   }
 }

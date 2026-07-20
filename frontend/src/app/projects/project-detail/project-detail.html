@@ -1,5 +1,6 @@
 @if (project) {
   <div class="project-detail">
+    <button (click)="goBack()">← Volver</button>
     <h1>{{ project.name }}</h1>
     <p><strong>Cliente:</strong> {{ project.client }}</p>
     <p><strong>Líder:</strong> {{ project.leader }}</p>
