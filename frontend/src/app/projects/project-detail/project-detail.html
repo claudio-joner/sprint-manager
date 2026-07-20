@@ -18,10 +18,9 @@
       <p>Sprint {{ sprint.numero }} - {{ sprint.totalHours }}hs</p>
     }
 
-    <h2>Funcionalidades</h2>
-    @for (functionality of project.funcionalities; track functionality.id) {
-      <p>{{ functionality.name }}</p>
-    }
+    <h2>Tablero Kanban</h2>
+    <app-kanban-board [projectId]="project.id"></app-kanban-board>
+
   </div>
 } @else {
   <p>Cargando proyecto...</p>

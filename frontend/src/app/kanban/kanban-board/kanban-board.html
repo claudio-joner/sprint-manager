@@ -1,0 +1,15 @@
+<div class="kanban-board">
+  @for (column of columns; track column.id) {
+    <div class="kanban-column">
+      <h3>{{ column.label }}</h3>
+      <div class="kanban-tasks">
+        @for (task of getTasksByStatus(column.id); track task.id) {
+          <div class="task-card">
+            <p>{{ task.name }}</p>
+            <p>{{ task.estimatedTime }}hs</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

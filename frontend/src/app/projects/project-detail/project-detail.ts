@@ -2,11 +2,12 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from '../../services/project';
+import { KanbanBoardComponent } from '../../kanban/kanban-board/kanban-board';
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, KanbanBoardComponent],
   templateUrl: './project-detail.html',
   styleUrl: './project-detail.css'
 })
