@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project';
 
 @Component({
@@ -13,13 +14,25 @@ export class ProjectListComponent implements OnInit {
 
   projects: any[] = [];
 
-  constructor(private projectService: ProjectService) {}
+  constructor(
+    private projectService: ProjectService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    console.log('Componente cargado');
-    this.projectService.getAll().subscribe(data => {
-      console.log('Proyectos:', data);
-      this.projects = data;
+    this.projectService.getAll().subscribe({
+      next: (data) => {
+        this.projects = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log('error:', err);
+      }
     });
+  }
+
+  goToProject(id: number): void {
+    this.router.navigate(['/projects', id]);
   }
 }

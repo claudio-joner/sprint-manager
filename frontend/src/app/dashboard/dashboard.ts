@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '../services/project';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,8 +20,13 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private projectService: ProjectService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
+
+  goToProjects(): void {
+    this.router.navigate(['/projects']);
+  }
 
   ngOnInit(): void {
     this.currentDate = new Date().toLocaleDateString('es-AR', {

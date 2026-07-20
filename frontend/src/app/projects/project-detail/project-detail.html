@@ -1,0 +1,28 @@
+@if (project) {
+  <div class="project-detail">
+    <h1>{{ project.name }}</h1>
+    <p><strong>Cliente:</strong> {{ project.client }}</p>
+    <p><strong>Líder:</strong> {{ project.leader }}</p>
+    <p><strong>Horas totales:</strong> {{ project.totalHours }}</p>
+    <p><strong>Horas por Sprint:</strong> {{ project.hoursPerSprint }}</p>
+    <p><strong>Fecha de inicio:</strong> {{ project.startDate }}</p>
+    <p><strong>Fecha estimada de fin:</strong> {{ project.estimatedEndDate }}</p>
+
+    <h2>Integrantes</h2>
+    @for (member of project.members; track member.id) {
+      <p>{{ member.name }} - {{ member.email }}</p>
+    }
+
+    <h2>Sprints</h2>
+    @for (sprint of project.sprints; track sprint.id) {
+      <p>Sprint {{ sprint.numero }} - {{ sprint.totalHours }}hs</p>
+    }
+
+    <h2>Funcionalidades</h2>
+    @for (functionality of project.funcionalities; track functionality.id) {
+      <p>{{ functionality.name }}</p>
+    }
+  </div>
+} @else {
+  <p>Cargando proyecto...</p>
+}
