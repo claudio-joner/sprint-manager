@@ -14,6 +14,7 @@
           <div class="task-card" cdkDrag>
             <p><strong>{{ task.name }}</strong></p>
             <p>{{ task.estimatedTime }}hs</p>
+            <button (click)="deleteTask(task.id, column)">Eliminar</button>
           </div>
         }
 

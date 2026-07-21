@@ -9,20 +9,104 @@
     <p><strong>Fecha de inicio:</strong> {{ project.startDate }}</p>
     <p><strong>Fecha estimada de fin:</strong> {{ project.estimatedEndDate }}</p>
 
-    <h2>Integrantes</h2>
+    <h2>Integrantes <button type="button" (click)="showMemberModal = true">+ Agregar</button></h2>
     @for (member of project.members; track member.id) {
-      <p>{{ member.name }} - {{ member.email }}</p>
+      <p>
+        {{ member.name }} - {{ member.email }}
+        <button (click)="deleteMember(member.id)">Eliminar</button>
+      </p>
     }
 
-    <h2>Sprints</h2>
+    <h2>Sprints <button type="button" (click)="showSprintModal = true">+ Agregar</button></h2>
     @for (sprint of project.sprints; track sprint.id) {
-      <p>Sprint {{ sprint.numero }} - {{ sprint.totalHours }}hs</p>
+      <p>
+        Sprint {{ sprint.numero }} - {{ sprint.totalHours }}hs
+        <button (click)="deleteSprint(sprint.id)">Eliminar</button>
+      </p>
     }
 
-    <h2>Tablero Kanban</h2>
-    <app-kanban-board [projectId]="project.id"></app-kanban-board>
+    <h2>Funcionalidades <button type="button" (click)="showFunctionalityModal = true">+ Agregar</button></h2>
+    @for (functionality of project.funcionalities; track functionality.id) {
+      <p>
+        {{ functionality.name }} - {{ functionality.priority }} - {{ functionality.status }}
+        <button (click)="deleteFunctionality(functionality.id)">Eliminar</button>
+      </p>
+    }
+
+    <h2>Tablero Kanban <button type="button" (click)="showTaskModal = true">+ Agregar tarea</button></h2>
+    <app-kanban-board [tasks]="getProjectTasks()" (taskDeleted)="loadProject()"></app-kanban-board>
 
   </div>
+
+  <app-modal [open]="showMemberModal" title="Nuevo Integrante" (closed)="showMemberModal = false">
+    <form #memberForm="ngForm" (ngSubmit)="createMember()">
+      <input type="text" name="memberName" [(ngModel)]="newMember.name" placeholder="Nombre" required>
+      <input type="email" name="memberEmail" [(ngModel)]="newMember.email" placeholder="Email" required>
+      <button type="submit" [disabled]="memberForm.invalid">Agregar integrante</button>
+    </form>
+  </app-modal>
+
+  <app-modal [open]="showSprintModal" title="Nuevo Sprint" (closed)="showSprintModal = false">
+    <form #sprintForm="ngForm" (ngSubmit)="createSprint()">
+      <input type="number" name="sprintNumero" [(ngModel)]="newSprint.numero" placeholder="Número" required min="1">
+      <input type="number" name="sprintHoras" [(ngModel)]="newSprint.totalHours" placeholder="Horas totales" required min="0">
+      <button type="submit" [disabled]="sprintForm.invalid">Agregar sprint</button>
+    </form>
+  </app-modal>
+
+  <app-modal [open]="showFunctionalityModal" title="Nueva Funcionalidad" (closed)="showFunctionalityModal = false">
+    <form #functionalityForm="ngForm" (ngSubmit)="createFunctionality()">
+      <input type="text" name="functionalityName" [(ngModel)]="newFunctionality.name" placeholder="Nombre" required>
+      <input type="text" name="functionalityObservation" [(ngModel)]="newFunctionality.observation" placeholder="Observación" required>
+      <select name="functionalityPriority" [(ngModel)]="newFunctionality.priority" required>
+        <option value="HIGH">Alta</option>
+        <option value="MEDIUM">Media</option>
+        <option value="LOW">Baja</option>
+      </select>
+      <select name="functionalityStatus" [(ngModel)]="newFunctionality.status" required>
+        <option value="PENDING">Pendiente</option>
+        <option value="IN_PROGRESS">En progreso</option>
+        <option value="COMPLETED">Completada</option>
+      </select>
+      <select name="functionalitySprint" [(ngModel)]="newFunctionality.sprintId">
+        <option [ngValue]="null">Sin sprint</option>
+        @for (sprint of project.sprints; track sprint.id) {
+          <option [ngValue]="sprint.id">Sprint {{ sprint.numero }}</option>
+        }
+      </select>
+      <button type="submit" [disabled]="functionalityForm.invalid">Agregar funcionalidad</button>
+    </form>
+  </app-modal>
+
+  <app-modal [open]="showTaskModal" title="Nueva Tarea" (closed)="showTaskModal = false">
+    <form #taskForm="ngForm" (ngSubmit)="createTask()">
+      <input type="text" name="taskName" [(ngModel)]="newTask.name" placeholder="Nombre de la tarea" required>
+      <input type="text" name="taskComments" [(ngModel)]="newTask.comments" placeholder="Comentarios" required>
+      <input type="number" name="taskEstimatedTime" [(ngModel)]="newTask.estimatedTime" placeholder="Horas estimadas" required min="0">
+      <input type="date" name="taskStartDate" [(ngModel)]="newTask.startDate" required>
+      <input type="date" name="taskEndDate" [(ngModel)]="newTask.endDate" required>
+      <select name="taskSprint" [(ngModel)]="newTask.sprintId">
+        <option [ngValue]="null">Sin sprint</option>
+        @for (sprint of project.sprints; track sprint.id) {
+          <option [ngValue]="sprint.id">Sprint {{ sprint.numero }}</option>
+        }
+      </select>
+      <select name="taskMember" [(ngModel)]="newTask.memberId">
+        <option [ngValue]="null">Sin asignar</option>
+        @for (member of project.members; track member.id) {
+          <option [ngValue]="member.id">{{ member.name }}</option>
+        }
+      </select>
+      <select name="taskFunctionality" [(ngModel)]="newTask.functionalityId">
+        <option [ngValue]="null">Sin funcionalidad</option>
+        @for (functionality of project.funcionalities; track functionality.id) {
+          <option [ngValue]="functionality.id">{{ functionality.name }}</option>
+        }
+      </select>
+      <p><em>Nota: una tarea sin sprint ni funcionalidad asignada no aparece en el tablero.</em></p>
+      <button type="submit" [disabled]="taskForm.invalid">Agregar tarea</button>
+    </form>
+  </app-modal>
 } @else {
   <p>Cargando proyecto...</p>
 }
