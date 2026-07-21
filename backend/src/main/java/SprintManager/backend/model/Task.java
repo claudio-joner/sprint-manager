@@ -34,20 +34,20 @@ public class Task {
     @Column(nullable = false)
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate endDate;
 
-    @JsonBackReference
+    @JsonBackReference("sprint-tasks")
     @ManyToOne
     @JoinColumn(name = "sprint_id")
     private Sprint sprint;
 
-    @JsonBackReference
+    @JsonBackReference("member-tasks")
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @JsonBackReference
+    @JsonBackReference("functionality-tasks")
     @ManyToOne
     @JoinColumn(name = "functionality_id")
     private Functionality functionality;
@@ -140,11 +140,11 @@ public class Task {
         this.member = member;
     }
 
-    public Functionality getFuncionality() {
+    public Functionality getFunctionality() {
         return functionality;
     }
 
-    public void setFuncionality(Functionality functionality) {
+    public void setFunctionality(Functionality functionality) {
         this.functionality = functionality;
     }
 

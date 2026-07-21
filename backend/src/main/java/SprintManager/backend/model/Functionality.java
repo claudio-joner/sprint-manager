@@ -25,7 +25,7 @@ public class Functionality {
     @Column(nullable = false)
     private Status status;
 
-    @JsonBackReference
+    @JsonBackReference("project-functionalities")
     @ManyToOne
     @JoinColumn(name = "project_id",nullable = false)
     private Project project;
@@ -34,7 +34,7 @@ public class Functionality {
     @JoinColumn(name = "sprint_id")
     private Sprint sprint;
 
-    @JsonManagedReference
+    @JsonManagedReference("functionality-tasks")
     @OneToMany(mappedBy =  "functionality")
     private List<Task> tasks;
 

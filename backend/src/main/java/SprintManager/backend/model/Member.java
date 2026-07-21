@@ -19,7 +19,7 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
-    @JsonBackReference
+    @JsonBackReference("project-members")
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;

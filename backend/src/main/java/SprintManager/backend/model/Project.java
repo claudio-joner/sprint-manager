@@ -37,15 +37,15 @@ public class Project {
 
     private LocalDate  realEndDate;
 
-    @JsonManagedReference
+    @JsonManagedReference("project-members")
     @OneToMany(mappedBy = "project")
     private List<Member> members;
 
-    @JsonManagedReference
+    @JsonManagedReference("project-sprints")
     @OneToMany(mappedBy = "project")
     private List<Sprint> sprints;
 
-    @JsonManagedReference
+    @JsonManagedReference("project-functionalities")
     @OneToMany(mappedBy = "project")
     private List<Functionality> funcionalities;
 

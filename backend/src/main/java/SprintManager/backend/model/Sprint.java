@@ -20,12 +20,12 @@ public class Sprint {
     @Column(nullable = false)
     private Double totalHours;
 
-    @JsonBackReference
+    @JsonBackReference("project-sprints")
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    @JsonBackReference
+    @JsonManagedReference("sprint-tasks")
     @OneToMany(mappedBy = "sprint")
     private List<Task> tasks;
 
