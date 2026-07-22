@@ -1,1 +1,8 @@
+<button class="theme-toggle" type="button" (click)="theme.toggle()">
+  <span class="theme-toggle-track" [class.is-light]="theme.current === 'light'">
+    <span class="theme-toggle-thumb"></span>
+  </span>
+  <span class="theme-toggle-label">{{ theme.current === 'dark' ? 'Oscuro' : 'Claro' }}</span>
+</button>
+
 <router-outlet></router-outlet>

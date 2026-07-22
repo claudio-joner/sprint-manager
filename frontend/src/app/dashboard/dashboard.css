@@ -1,0 +1,81 @@
+.dashboard {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.welcome h1 {
+  margin: 0 0 0.2rem;
+}
+
+.welcome p {
+  color: var(--text-muted);
+  margin: 0 0 1.5rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.last-project {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.last-project h2 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.last-project h3 {
+  margin: 0 0 0.75rem;
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.last-project h3:hover {
+  text-decoration: underline;
+}
+
+.last-project p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.dashboard h2 {
+  font-size: 1.1rem;
+  margin-top: 2rem;
+}
+
+.dashboard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dashboard li {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.dashboard li:hover {
+  background: var(--surface-2);
+  border-color: var(--accent);
+}

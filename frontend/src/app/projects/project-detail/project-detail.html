@@ -1,35 +1,37 @@
 @if (project) {
   <div class="project-detail">
-    <button (click)="goBack()">← Volver</button>
+    <button class="btn-secondary" (click)="goBack()">← Volver</button>
     <h1>{{ project.name }}</h1>
-    <p><strong>Cliente:</strong> {{ project.client }}</p>
-    <p><strong>Líder:</strong> {{ project.leader }}</p>
-    <p><strong>Horas totales:</strong> {{ project.totalHours }}</p>
-    <p><strong>Horas por Sprint:</strong> {{ project.hoursPerSprint }}</p>
-    <p><strong>Fecha de inicio:</strong> {{ project.startDate }}</p>
-    <p><strong>Fecha estimada de fin:</strong> {{ project.estimatedEndDate }}</p>
+    <div class="project-info">
+      <p><strong>Cliente:</strong> {{ project.client }}</p>
+      <p><strong>Líder:</strong> {{ project.leader }}</p>
+      <p><strong>Horas totales:</strong> {{ project.totalHours }}</p>
+      <p><strong>Horas por Sprint:</strong> {{ project.hoursPerSprint }}</p>
+      <p><strong>Fecha de inicio:</strong> {{ project.startDate }}</p>
+      <p><strong>Fecha estimada de fin:</strong> {{ project.estimatedEndDate }}</p>
+    </div>
 
     <h2>Integrantes <button type="button" (click)="showMemberModal = true">+ Agregar</button></h2>
     @for (member of project.members; track member.id) {
-      <p>
+      <p class="list-item">
         {{ member.name }} - {{ member.email }}
-        <button (click)="deleteMember(member.id)">Eliminar</button>
+        <button class="btn-danger" (click)="deleteMember(member.id)">Eliminar</button>
       </p>
     }
 
     <h2>Sprints <button type="button" (click)="showSprintModal = true">+ Agregar</button></h2>
     @for (sprint of project.sprints; track sprint.id) {
-      <p>
+      <p class="list-item">
         Sprint {{ sprint.numero }} - {{ sprint.totalHours }}hs
-        <button (click)="deleteSprint(sprint.id)">Eliminar</button>
+        <button class="btn-danger" (click)="deleteSprint(sprint.id)">Eliminar</button>
       </p>
     }
 
     <h2>Funcionalidades <button type="button" (click)="showFunctionalityModal = true">+ Agregar</button></h2>
     @for (functionality of project.funcionalities; track functionality.id) {
-      <p>
+      <p class="list-item">
         {{ functionality.name }} - {{ functionality.priority }} - {{ functionality.status }}
-        <button (click)="deleteFunctionality(functionality.id)">Eliminar</button>
+        <button class="btn-danger" (click)="deleteFunctionality(functionality.id)">Eliminar</button>
       </p>
     }
 

@@ -1,1 +1,117 @@
-/* You can add global styles to this file, and also import other style files */
+/* Paleta base: grises en ambos modos, sin blanco/negro puro */
+:root {
+  --bg: #191b1f;
+  --surface: #22252b;
+  --surface-2: #2a2e35;
+  --text: #e7e9ee;
+  --text-muted: #9aa0ab;
+  --border: #383d46;
+  --accent: #7c8cf0;
+  --accent-hover: #93a1f5;
+  --danger: #e05a5a;
+  --danger-hover: #ea7373;
+
+  --status-sin-asignar: #64748b;
+  --status-progreso: #2563eb;
+  --status-revision: #d97706;
+  --status-bloqueada: #dc2626;
+  --status-completada: #16a34a;
+}
+
+:root[data-theme='light'] {
+  --bg: #e7e9ee;
+  --surface: #eef0f4;
+  --surface-2: #f4f5f8;
+  --text: #20242c;
+  --text-muted: #5b6270;
+  --border: #cbd0d9;
+  --accent: #4f63d2;
+  --accent-hover: #3f51b8;
+  --danger: #c0392b;
+  --danger-hover: #a53125;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+h1, h2, h3 {
+  color: var(--text);
+}
+
+a {
+  color: var(--accent);
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+button:hover {
+  background: var(--accent-hover);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.btn-danger {
+  background: var(--danger);
+}
+
+button.btn-danger:hover {
+  background: var(--danger-hover);
+}
+
+button.btn-secondary {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+button.btn-secondary:hover {
+  background: var(--border);
+}
+
+input, select, textarea {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}

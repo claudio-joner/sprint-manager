@@ -72,7 +72,7 @@ export class ProjectDetailComponent implements OnInit {
     this.projectService.getById(this.projectId).subscribe({
       next: (data) => {
         this.project = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.log('error:', err);

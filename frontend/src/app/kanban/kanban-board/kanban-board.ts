@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TaskService } from '../../services/task';
 
 @Component({
@@ -34,7 +34,7 @@ export class KanbanBoardComponent implements OnChanges {
       const column = this.columns.find(c => c.id === task.status);
       if (column) column.tasks.push(task);
     });
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   drop(event: CdkDragDrop<any[]>, newStatus: string): void {
@@ -48,13 +48,26 @@ export class KanbanBoardComponent implements OnChanges {
         event.currentIndex
       );
       const task = event.container.data[event.currentIndex];
+      task.status = newStatus;
       this.taskService.updateStatus(task.id, newStatus).subscribe();
     }
+    this.cdr.markForCheck();
   }
 
   getColumnIds(): string[] {
     return this.columns.map(c => c.id);
   }
+
+  /**
+   * Una tarea solo puede avanzar en el flujo del kanban, nunca retroceder
+   * a una columna anterior a la que ya alcanzó.
+   */
+  canEnter = (drag: CdkDrag<any>, drop: CdkDropList<any>): boolean => {
+    const task = drag.data;
+    const fromIndex = this.columns.findIndex(c => c.id === task.status);
+    const toIndex = this.columns.findIndex(c => c.id === drop.id);
+    return fromIndex === -1 || toIndex >= fromIndex;
+  };
 
   deleteTask(id: number, column: any): void {
     this.taskService.delete(id).subscribe({

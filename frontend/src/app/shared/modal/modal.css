@@ -1,7 +1,9 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(10, 12, 16, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,13 +11,16 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
   padding: 1.5rem;
   border-radius: 8px;
   min-width: 320px;
   max-width: 90vw;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .modal-header {
@@ -23,4 +28,19 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.modal-header h3 {
+  margin: 0;
+}
+
+.modal-header button {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.2rem 0.5rem;
+}
+
+.modal-header button:hover {
+  color: var(--text);
+  background: var(--surface);
 }

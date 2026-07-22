@@ -1,6 +1,6 @@
 <div class="kanban-board">
   @for (column of columns; track column.id) {
-    <div class="kanban-column">
+    <div class="kanban-column" [attr.data-status]="column.id">
       <h3>{{ column.label }}</h3>
       <div
         class="kanban-tasks"
@@ -8,13 +8,17 @@
         [id]="column.id"
         [cdkDropListData]="column.tasks"
         [cdkDropListConnectedTo]="getColumnIds()"
+        [cdkDropListEnterPredicate]="canEnter"
         (cdkDropListDropped)="drop($event, column.id)">
 
         @for (task of column.tasks; track task.id) {
-          <div class="task-card" cdkDrag>
-            <p><strong>{{ task.name }}</strong></p>
-            <p>{{ task.estimatedTime }}hs</p>
-            <button (click)="deleteTask(task.id, column)">Eliminar</button>
+          <div class="task-card" cdkDrag [cdkDragData]="task">
+            <p class="task-name">{{ task.name }}</p>
+            <p class="task-meta">{{ task.estimatedTime }}hs estimadas</p>
+            <p class="task-meta">Responsable: {{ task.member?.name ?? 'Sin asignar' }}</p>
+            <p class="task-meta">Inicio: {{ task.startDate }}</p>
+            <p class="task-meta">Fin estimado: {{ task.endDate ?? '-' }}</p>
+            <button class="btn-danger" (click)="deleteTask(task.id, column)">Eliminar</button>
           </div>
         }
 
