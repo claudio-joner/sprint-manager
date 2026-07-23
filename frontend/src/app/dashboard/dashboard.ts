@@ -3,16 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProjectService } from '../services/project';
-import { SprintService } from '../services/sprint';
-import { MemberService } from '../services/member';
 import { ModalComponent } from '../shared/modal/modal';
+import { PieChartComponent, PieChartSlice } from '../shared/pie-chart/pie-chart';
 import { getProjectTasks } from '../shared/project-tasks.util';
 import { getLastProjectId } from '../shared/last-project.util';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalComponent],
+  imports: [CommonModule, FormsModule, ModalComponent, PieChartComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -24,17 +23,15 @@ export class DashboardComponent implements OnInit {
   lastProject: any = null;
 
   showProjectModal = false;
-  showSprintModal = false;
-  showMemberModal = false;
+
+  pageSize = 5;
+  startedPage = 1;
+  finishedPage = 1;
 
   newProject = { name: '', client: '', leader: '', totalHours: null, hoursPerSprint: null, startDate: '', estimatedEndDate: '' };
-  newSprint = { projectId: null, numero: null, totalHours: null };
-  newMember = { projectId: null, name: '', email: '' };
 
   constructor(
     private projectService: ProjectService,
-    private sprintService: SprintService,
-    private memberService: MemberService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
@@ -55,8 +52,56 @@ export class DashboardComponent implements OnInit {
         this.startedProjects = data.filter(p => !p.realEndDate);
         this.finishedProjects = data.filter(p => !!p.realEndDate);
         this.loadLastProject(data);
-        this.cdr.detectChanges();
+        this.startedPage = Math.min(this.startedPage, this.totalStartedPages);
+        this.finishedPage = Math.min(this.finishedPage, this.totalFinishedPages);
+        this.cdr.markForCheck();
       },
+      error: (err) => console.log('error:', err)
+    });
+  }
+
+  get pieChartData(): PieChartSlice[] {
+    return [
+      { label: 'Iniciados', value: this.startedProjects.length, color: 'var(--status-revision)' },
+      { label: 'Finalizados', value: this.finishedProjects.length, color: 'var(--status-bloqueada)' }
+    ];
+  }
+
+  get totalStartedPages(): number {
+    return Math.max(1, Math.ceil(this.startedProjects.length / this.pageSize));
+  }
+
+  get pagedStartedProjects(): any[] {
+    const start = (this.startedPage - 1) * this.pageSize;
+    return this.startedProjects.slice(start, start + this.pageSize);
+  }
+
+  get totalFinishedPages(): number {
+    return Math.max(1, Math.ceil(this.finishedProjects.length / this.pageSize));
+  }
+
+  get pagedFinishedProjects(): any[] {
+    const start = (this.finishedPage - 1) * this.pageSize;
+    return this.finishedProjects.slice(start, start + this.pageSize);
+  }
+
+  onPageSizeChange(): void {
+    this.startedPage = 1;
+    this.finishedPage = 1;
+  }
+
+  goToStartedPage(page: number): void {
+    this.startedPage = Math.min(Math.max(1, page), this.totalStartedPages);
+  }
+
+  goToFinishedPage(page: number): void {
+    this.finishedPage = Math.min(Math.max(1, page), this.totalFinishedPages);
+  }
+
+  closeProject(id: number, event: Event): void {
+    event.stopPropagation();
+    this.projectService.close(id).subscribe({
+      next: () => this.loadProjects(),
       error: (err) => console.log('error:', err)
     });
   }
@@ -90,32 +135,6 @@ export class DashboardComponent implements OnInit {
       next: () => {
         this.newProject = { name: '', client: '', leader: '', totalHours: null, hoursPerSprint: null, startDate: '', estimatedEndDate: '' };
         this.showProjectModal = false;
-        this.loadProjects();
-      },
-      error: (err) => console.log('error:', err)
-    });
-  }
-
-  createSprint(): void {
-    const { projectId, ...rest } = this.newSprint;
-    const payload = { ...rest, project: { id: projectId } };
-    this.sprintService.create(payload).subscribe({
-      next: () => {
-        this.newSprint = { projectId: null, numero: null, totalHours: null };
-        this.showSprintModal = false;
-        this.loadProjects();
-      },
-      error: (err) => console.log('error:', err)
-    });
-  }
-
-  createMember(): void {
-    const { projectId, ...rest } = this.newMember;
-    const payload = { ...rest, project: { id: projectId } };
-    this.memberService.create(payload).subscribe({
-      next: () => {
-        this.newMember = { projectId: null, name: '', email: '' };
-        this.showMemberModal = false;
         this.loadProjects();
       },
       error: (err) => console.log('error:', err)

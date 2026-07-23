@@ -1,44 +1,71 @@
-<div class="dashboard">
-  <div class="welcome">
-    <h1>Sprint Manager</h1>
-    <p>{{ currentDate }}</p>
+<div class="dashboard max-w-[1400px] mx-auto px-6 pt-8 pb-12">
+  <div class="text-center">
+    <h1 class="mb-1">Sprint Manager</h1>
+    <p class="text-[var(--text-muted)] mb-6">{{ currentDate }}</p>
   </div>
 
-  <div class="actions">
-    <button (click)="showProjectModal = true">Nuevo Proyecto</button>
-    <button (click)="showSprintModal = true">Nuevo Sprint</button>
-    <button (click)="showMemberModal = true">Nuevo Miembro</button>
+  <h2 class="text-center text-2xl font-semibold mt-8 mb-4">Resumen</h2>
+  <div class="flex justify-between items-center gap-8 flex-wrap mb-6 bg-[var(--surface)] border border-[var(--border)] border-l-4 border-l-[var(--accent)] rounded-lg px-6 py-5">
+    @if (lastProject) {
+      <div class="flex-1 min-w-[320px] text-center">
+        <h2 class="mt-0 text-base text-[var(--text-muted)] uppercase tracking-wide">Último proyecto trabajado</h2>
+        <h3 class="mb-3 cursor-pointer text-[var(--accent)] hover:underline" (click)="goToProject(lastProject.id)">{{ lastProject.name }}</h3>
+        <p class="my-1 text-sm"><strong>Tareas sin resolver:</strong> {{ getUnresolvedTasksCount(lastProject) }}</p>
+        <p class="my-1 text-sm"><strong>Última tarea realizada:</strong> {{ getLastCompletedTask(lastProject)?.name ?? '-' }}</p>
+        <p class="my-1 text-sm"><strong>Nro de sprint:</strong> {{ getLatestSprintNumber(lastProject) ?? '-' }}</p>
+        <p class="my-1 text-sm"><strong>Cantidad de horas:</strong> {{ lastProject.totalHours }}</p>
+        <p class="my-1 text-sm"><strong>Fecha de finalización:</strong> {{ lastProject.realEndDate ?? lastProject.estimatedEndDate }}</p>
+      </div>
+    }
+    <app-pie-chart class="shrink-0" [data]="pieChartData"></app-pie-chart>
   </div>
 
-  @if (lastProject) {
-    <div class="last-project">
-      <h2>Último proyecto trabajado</h2>
-      <h3 (click)="goToProject(lastProject.id)">{{ lastProject.name }}</h3>
-      <p><strong>Tareas sin resolver:</strong> {{ getUnresolvedTasksCount(lastProject) }}</p>
-      <p><strong>Última tarea realizada:</strong> {{ getLastCompletedTask(lastProject)?.name ?? '-' }}</p>
-      <p><strong>Nro de sprint:</strong> {{ getLatestSprintNumber(lastProject) ?? '-' }}</p>
-      <p><strong>Cantidad de horas:</strong> {{ lastProject.totalHours }}</p>
-      <p><strong>Fecha de finalización:</strong> {{ lastProject.realEndDate ?? lastProject.estimatedEndDate }}</p>
-    </div>
-  }
-
-  <h2>Proyectos iniciados</h2>
-  <ul>
-    @for (project of startedProjects; track project.id) {
-      <li (click)="goToProject(project.id)">{{ project.name }} - {{ project.client }}</li>
+  <div class="flex items-center gap-3 mt-8 flex-wrap">
+    <h2 class="m-0 text-[22px] font-bold">Proyectos iniciados</h2>
+    <button class="btn-add-icon w-[26px] h-[26px] p-0 rounded-full flex items-center justify-center text-lg leading-none" (click)="showProjectModal = true" title="Nuevo proyecto" aria-label="Nuevo proyecto">+</button>
+    <select class="ml-auto text-sm" name="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+      <option [ngValue]="5">5 por página</option>
+      <option [ngValue]="10">10 por página</option>
+      <option [ngValue]="15">15 por página</option>
+      <option [ngValue]="20">20 por página</option>
+    </select>
+  </div>
+  <ul class="list-none p-0 my-2 flex flex-col gap-2">
+    @for (project of pagedStartedProjects; track project.id) {
+      <li class="bg-[var(--surface)] border border-[var(--border)] rounded-md px-4 py-3 cursor-pointer transition-colors flex items-center justify-between gap-4 hover:bg-[var(--surface-2)] hover:border-[var(--accent)]" (click)="goToProject(project.id)">
+        <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ project.name }} - {{ project.client }}</span>
+        <span class="flex gap-2 shrink-0">
+          <button class="btn-secondary text-sm px-3 py-1.5" (click)="goToProject(project.id); $event.stopPropagation()">Ver detalles</button>
+          <button class="btn-danger text-sm px-3 py-1.5" (click)="closeProject(project.id, $event)">Finalizar</button>
+        </span>
+      </li>
     } @empty {
       <p>No hay proyectos iniciados.</p>
     }
   </ul>
+  @if (totalStartedPages > 1) {
+    <div class="flex items-center justify-center gap-4 mt-2">
+      <button class="btn-secondary text-sm px-3 py-1.5" [disabled]="startedPage === 1" (click)="goToStartedPage(startedPage - 1)">Anterior</button>
+      <span class="text-sm text-[var(--text-muted)]">Página {{ startedPage }} de {{ totalStartedPages }}</span>
+      <button class="btn-secondary text-sm px-3 py-1.5" [disabled]="startedPage === totalStartedPages" (click)="goToStartedPage(startedPage + 1)">Siguiente</button>
+    </div>
+  }
 
-  <h2>Proyectos finalizados</h2>
-  <ul>
-    @for (project of finishedProjects; track project.id) {
-      <li (click)="goToProject(project.id)">{{ project.name }} - {{ project.client }}</li>
+  <h2 class="text-[1.1rem] font-semibold mt-8">Proyectos finalizados</h2>
+  <ul class="list-none p-0 my-2 flex flex-col gap-2">
+    @for (project of pagedFinishedProjects; track project.id) {
+      <li class="bg-[var(--surface)] border border-[var(--border)] rounded-md px-4 py-3 cursor-pointer transition-colors hover:bg-[var(--surface-2)] hover:border-[var(--accent)]" (click)="goToProject(project.id)">{{ project.name }} - {{ project.client }}</li>
     } @empty {
       <p>No hay proyectos finalizados.</p>
     }
   </ul>
+  @if (totalFinishedPages > 1) {
+    <div class="flex items-center justify-center gap-4 mt-2">
+      <button class="btn-secondary text-sm px-3 py-1.5" [disabled]="finishedPage === 1" (click)="goToFinishedPage(finishedPage - 1)">Anterior</button>
+      <span class="text-sm text-[var(--text-muted)]">Página {{ finishedPage }} de {{ totalFinishedPages }}</span>
+      <button class="btn-secondary text-sm px-3 py-1.5" [disabled]="finishedPage === totalFinishedPages" (click)="goToFinishedPage(finishedPage + 1)">Siguiente</button>
+    </div>
+  }
 </div>
 
 <app-modal [open]="showProjectModal" title="Nuevo Proyecto" (closed)="showProjectModal = false">
@@ -54,30 +81,3 @@
   </form>
 </app-modal>
 
-<app-modal [open]="showSprintModal" title="Nuevo Sprint" (closed)="showSprintModal = false">
-  <form #sprintForm="ngForm" (ngSubmit)="createSprint()">
-    <select name="sprintProject" [(ngModel)]="newSprint.projectId" required>
-      <option [ngValue]="null" disabled>Elegir proyecto</option>
-      @for (project of startedProjects; track project.id) {
-        <option [ngValue]="project.id">{{ project.name }}</option>
-      }
-    </select>
-    <input type="number" name="numero" [(ngModel)]="newSprint.numero" placeholder="Número" required min="1">
-    <input type="number" name="totalHours" [(ngModel)]="newSprint.totalHours" placeholder="Horas totales" required min="0">
-    <button type="submit" [disabled]="sprintForm.invalid">Crear Sprint</button>
-  </form>
-</app-modal>
-
-<app-modal [open]="showMemberModal" title="Nuevo Miembro" (closed)="showMemberModal = false">
-  <form #memberForm="ngForm" (ngSubmit)="createMember()">
-    <select name="memberProject" [(ngModel)]="newMember.projectId" required>
-      <option [ngValue]="null" disabled>Elegir proyecto</option>
-      @for (project of startedProjects; track project.id) {
-        <option [ngValue]="project.id">{{ project.name }}</option>
-      }
-    </select>
-    <input type="text" name="name" [(ngModel)]="newMember.name" placeholder="Nombre" required>
-    <input type="email" name="email" [(ngModel)]="newMember.email" placeholder="Email" required>
-    <button type="submit" [disabled]="memberForm.invalid">Crear Miembro</button>
-  </form>
-</app-modal>

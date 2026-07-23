@@ -26,4 +26,8 @@ export class ProjectService {
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
+
+  close(id: number): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${id}/close`, null);
+  }
 }

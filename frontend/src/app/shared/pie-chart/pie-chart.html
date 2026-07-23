@@ -1,0 +1,26 @@
+<div class="pie-chart-wrap">
+  @if (total > 0) {
+    <svg viewBox="0 0 42 42" class="pie-chart-svg">
+      <circle class="pie-chart-bg" cx="21" cy="21" r="15.915" fill="transparent" stroke-width="6"></circle>
+      @for (seg of segments; track seg.label) {
+        <circle
+          cx="21" cy="21" r="15.915" fill="transparent"
+          stroke-width="6"
+          [attr.stroke]="seg.color"
+          [attr.stroke-dasharray]="seg.dashArray"
+          [attr.stroke-dashoffset]="seg.dashOffset"
+        ></circle>
+      }
+    </svg>
+    <ul class="pie-chart-legend">
+      @for (seg of segments; track seg.label) {
+        <li>
+          <span class="swatch" [style.background]="seg.color"></span>
+          {{ seg.label }}: {{ seg.value }} ({{ seg.percent | number:'1.0-0' }}%)
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="pie-chart-empty">No hay proyectos todavía.</p>
+  }
+</div>
