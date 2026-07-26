@@ -1,42 +1,98 @@
 @if (project) {
-  <div class="project-detail">
-    <button class="btn-secondary" (click)="goBack()">← Volver</button>
-    <h1>{{ project.name }}</h1>
-    <div class="project-info">
-      <p><strong>Cliente:</strong> {{ project.client }}</p>
-      <p><strong>Líder:</strong> {{ project.leader }}</p>
-      <p><strong>Horas totales:</strong> {{ project.totalHours }}</p>
-      <p><strong>Horas por Sprint:</strong> {{ project.hoursPerSprint }}</p>
-      <p><strong>Fecha de inicio:</strong> {{ project.startDate }}</p>
-      <p><strong>Fecha estimada de fin:</strong> {{ project.estimatedEndDate }}</p>
+  <div class="project-detail max-w-[1400px] mx-auto px-6 pt-8 pb-12">
+    <button class="btn-secondary text-sm px-3 py-1.5" (click)="goBack()">← Volver</button>
+
+    <h2 class="text-center text-2xl font-semibold mt-6 mb-4">Resumen</h2>
+    <div class="bg-[var(--surface)] border border-[var(--border)] border-l-4 border-l-[var(--accent)] rounded-lg px-6 py-5 mb-6">
+      <h1 class="text-center mt-0 mb-4">{{ project.name }}</h1>
+      <div class="flex justify-between items-start gap-8 flex-wrap">
+        <div class="flex-1 min-w-[280px] flex flex-col gap-1">
+          <p class="my-1 text-sm"><strong>Cliente:</strong> {{ project.client }}</p>
+          <p class="my-1 text-sm"><strong>Líder:</strong> {{ project.leader }}</p>
+          <p class="my-1 text-sm"><strong>Horas totales:</strong> {{ project.totalHours }}</p>
+          <p class="my-1 text-sm"><strong>Horas por Sprint:</strong> {{ project.hoursPerSprint }}</p>
+          <p class="my-1 text-sm"><strong>Horas restantes:</strong> {{ remainingHours }}</p>
+          <p class="my-1 text-sm"><strong>Fecha de inicio:</strong> {{ project.startDate }}</p>
+          <p class="my-1 text-sm"><strong>Fecha estimada de fin:</strong> {{ project.estimatedEndDate }}</p>
+        </div>
+        <div class="flex-1 min-w-[280px] flex flex-col items-center">
+          <div class="flex items-center gap-3 mb-2">
+            <h3 class="m-0 text-sm text-[var(--text-muted)] uppercase tracking-wide">
+              {{ chartView === 'status' ? 'Tareas del proyecto' : 'Distribución por sprint' }}
+            </h3>
+            <button class="btn-secondary text-xs px-2.5 py-1" (click)="toggleChartView()">Cambiar vista</button>
+          </div>
+          <app-pie-chart [data]="chartData"></app-pie-chart>
+        </div>
+      </div>
     </div>
 
-    <h2>Integrantes <button type="button" (click)="showMemberModal = true">+ Agregar</button></h2>
-    @for (member of project.members; track member.id) {
-      <p class="list-item">
-        {{ member.name }} - {{ member.email }}
-        <button class="btn-danger" (click)="deleteMember(member.id)">Eliminar</button>
-      </p>
+    <div class="flex items-center gap-3 mt-8 flex-wrap">
+      <h2 class="m-0 text-[22px] font-bold">Integrantes</h2>
+      <button class="btn-add-icon w-[26px] h-[26px] p-0 rounded-full flex items-center justify-center text-lg leading-none" (click)="showMemberModal = true" title="Nuevo integrante" aria-label="Nuevo integrante">+</button>
+    </div>
+    <ul class="list-none p-0 my-2 flex flex-col gap-2">
+      @for (member of project.members; track member.id) {
+        <li class="bg-[var(--surface)] border border-[var(--border)] rounded-md px-4 py-3 flex items-center justify-between gap-4">
+          <span>{{ member.name }} - {{ member.email }}</span>
+          <button class="btn-danger text-sm px-3 py-1.5 shrink-0" (click)="deleteMember(member.id)">Eliminar</button>
+        </li>
+      } @empty {
+        <p>No hay integrantes todavía.</p>
+      }
+    </ul>
+
+    <div class="flex items-center gap-3 mt-8 flex-wrap">
+      <h2 class="m-0 text-[22px] font-bold">Sprints</h2>
+      <button class="btn-add-icon w-[26px] h-[26px] p-0 rounded-full flex items-center justify-center text-lg leading-none" (click)="showSprintModal = true" title="Nuevo sprint" aria-label="Nuevo sprint">+</button>
+    </div>
+    <ul class="list-none p-0 my-2 flex flex-col gap-2">
+      @for (sprint of project.sprints; track sprint.id) {
+        <li class="bg-[var(--surface)] border border-[var(--border)] rounded-md px-4 py-3 flex items-center justify-between gap-4">
+          <span class="flex items-center gap-2">
+            Sprint {{ sprint.numero }} - {{ sprint.totalHours }}hs
+            @if (sprint.id === activeSprintId) {
+              <span class="text-[10px] font-bold uppercase tracking-wide bg-[var(--status-completada)] text-white px-2 py-0.5 rounded-full">Activado</span>
+            }
+          </span>
+          <span class="flex gap-2 shrink-0">
+            @if (sprint.id !== activeSprintId) {
+              <button class="btn-secondary text-sm px-3 py-1.5" (click)="activateSprint(sprint.id)">Activar</button>
+            }
+            <button class="btn-danger text-sm px-3 py-1.5" (click)="deleteSprint(sprint.id)">Eliminar</button>
+          </span>
+        </li>
+      } @empty {
+        <p>No hay sprints todavía.</p>
+      }
+    </ul>
+
+    <div class="flex items-center gap-3 mt-8 flex-wrap">
+      <h2 class="m-0 text-[22px] font-bold">Funcionalidades</h2>
+      <button class="btn-add-icon w-[26px] h-[26px] p-0 rounded-full flex items-center justify-center text-lg leading-none" (click)="showFunctionalityModal = true" title="Nueva funcionalidad" aria-label="Nueva funcionalidad">+</button>
+      <span class="text-sm text-[var(--text-muted)]">
+        @if (activeSprintId) {
+          del sprint activo
+        } @else {
+          no hay sprint activo
+        }
+      </span>
+    </div>
+    @if (activeSprintId) {
+      <app-functionality-board [functionalities]="activeSprintFunctionalities" (viewTasks)="viewFunctionalityTasks($event)"></app-functionality-board>
+    } @else {
+      <p class="text-[var(--text-muted)] text-sm mt-2">Activá un sprint para ver sus funcionalidades.</p>
     }
 
-    <h2>Sprints <button type="button" (click)="showSprintModal = true">+ Agregar</button></h2>
-    @for (sprint of project.sprints; track sprint.id) {
-      <p class="list-item">
-        Sprint {{ sprint.numero }} - {{ sprint.totalHours }}hs
-        <button class="btn-danger" (click)="deleteSprint(sprint.id)">Eliminar</button>
-      </p>
-    }
-
-    <h2>Funcionalidades <button type="button" (click)="showFunctionalityModal = true">+ Agregar</button></h2>
-    @for (functionality of project.funcionalities; track functionality.id) {
-      <p class="list-item">
-        {{ functionality.name }} - {{ functionality.priority }} - {{ functionality.status }}
-        <button class="btn-danger" (click)="deleteFunctionality(functionality.id)">Eliminar</button>
-      </p>
-    }
-
-    <h2>Tablero Kanban <button type="button" (click)="showTaskModal = true">+ Agregar tarea</button></h2>
-    <app-kanban-board [tasks]="getProjectTasks()" (taskDeleted)="loadProject()"></app-kanban-board>
+    <div class="flex items-center gap-3 mt-8 flex-wrap">
+      <h2 class="m-0 text-[22px] font-bold">Tareas</h2>
+      <button class="btn-add-icon w-[26px] h-[26px] p-0 rounded-full flex items-center justify-center text-lg leading-none" (click)="showTaskModal = true" title="Nueva tarea" aria-label="Nueva tarea">+</button>
+      @if (taskFilterFunctionalityId) {
+        <span class="text-sm text-[var(--text-muted)]">Filtrado por: {{ taskFilterFunctionalityName }}</span>
+        <button class="btn-secondary text-xs px-2.5 py-1" (click)="clearTaskFilter()">Ver todas</button>
+      }
+    </div>
+    <app-kanban-board [tasks]="filteredTasks" (taskDeleted)="loadProject()"></app-kanban-board>
 
   </div>
 

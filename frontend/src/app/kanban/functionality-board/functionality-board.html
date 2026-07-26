@@ -1,0 +1,21 @@
+<div class="flex gap-4 overflow-x-auto py-4">
+  @for (column of columns; track column.id) {
+    <div class="min-w-[240px] flex-1 bg-[var(--surface)] border border-[var(--border)] rounded-lg p-3">
+      <h3 class="m-0 mb-2.5 text-sm font-semibold">{{ column.label }}</h3>
+      <div class="flex flex-col gap-2 min-h-[80px]">
+        @for (f of getColumnFunctionalities(column.id); track f.id) {
+          <div class="bg-[var(--surface-2)] border border-[var(--border)] rounded-md p-2.5">
+            <p class="m-0 mb-1 font-semibold text-[var(--text)]">{{ f.name }}</p>
+            <p class="my-0.5 text-xs text-[var(--text-muted)]">Prioridad: {{ f.priority }}</p>
+            <p class="my-0.5 text-xs text-[var(--text-muted)]">Tareas: {{ f.tasks?.length ?? 0 }}</p>
+            <p class="my-0.5 text-xs text-[var(--text-muted)]">Inicio: -</p>
+            <p class="my-0.5 text-xs text-[var(--text-muted)]">Fin estimado: -</p>
+            <button class="btn-secondary text-xs px-2.5 py-1 mt-2" (click)="viewTasks.emit(f.id)">Ver tareas</button>
+          </div>
+        } @empty {
+          <p class="text-xs text-[var(--text-muted)]">Sin funcionalidades.</p>
+        }
+      </div>
+    </div>
+  }
+</div>
