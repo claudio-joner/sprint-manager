@@ -19,7 +19,7 @@ public class MemberController {
     @GetMapping("/{id}")
     public  Member getById(@PathVariable Long id ){ return memberService.getById(id);}
 
-    @PostMapping
+    @PostMapping(consumes = "application/json")
     public Member create(@RequestBody Member member){return  memberService.create(member); }
 
     @DeleteMapping("/{id}")

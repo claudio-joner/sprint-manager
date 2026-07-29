@@ -19,7 +19,7 @@ public class TaskController {
     @GetMapping("/{id}")
     public Task getById(@PathVariable Long id){return taskService.getById(id);}
 
-    @PostMapping
+    @PostMapping(consumes = "application/json")
     public Task create(@RequestBody Task task){ return  taskService.create(task);}
 
     @DeleteMapping("/{id}")

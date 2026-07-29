@@ -22,7 +22,7 @@ public class FunctionalityController {
     @GetMapping("/{id}")
     public Functionality getById(@PathVariable Long id){return functionalityService.getById(id);}
 
-    @PostMapping
+    @PostMapping(consumes = "application/json")
     public Functionality create(@RequestBody Functionality functionality){
        return functionalityService.create(functionality);
     }

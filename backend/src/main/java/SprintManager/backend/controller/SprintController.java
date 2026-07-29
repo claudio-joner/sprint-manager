@@ -18,7 +18,7 @@ public class SprintController {
     @GetMapping("/{id}")
     public Sprint getById(@PathVariable Long id){ return sprintService.getById(id);}
 
-    @PostMapping
+    @PostMapping(consumes = "application/json")
     public Sprint create(@RequestBody Sprint sprint){ return  sprintService.create(sprint);}
 
     @DeleteMapping("/{id}")

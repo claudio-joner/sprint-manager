@@ -25,8 +25,8 @@ public class ProjectController {
         return projectService.getById(id);
     }
 
-    @PostMapping
-    public Project create(@RequestBody Project project){
+    @PostMapping(consumes = "application/json")
+    public Project create(@RequestBody Project project) {
         return projectService.create(project);
     }
 
